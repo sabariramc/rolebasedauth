@@ -1,0 +1,40 @@
+version: "3.9"
+services:
+  golang:
+    image: "sabariram/golanglambdatest:latest"
+    volumes:
+      - .:/rolebaseauth
+    networks:
+      - mongonet
+      - graylog_graylog
+    environment:
+      GRAYLOG_ADD: graylog
+      MONGO_URL: mongodb://localmongo:27017
+      SERVICE_NAME: ${APP_SERVICE_NAME}
+      LOG_LEVEL: ${LOG_LEVEL}
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      KMS_ARN: ${KMS_ARN}
+      SECRET_ARN: ${SECRET_ARN}
+      SQS_URL: ${SQS_URL}
+      FIFO_SQS_URL: ${FIFO_SQS_URL}
+      SNS_ARN: ${SNS_ARN}
+      GRAYLOG_PORT: ${GRAYLOG_PORT}
+      LOG_BUFFER_SIZE: ${LOG_BUFFER_SIZE}
+      S3_BUCKET: ${S3_BUCKET}
+    command: tail -f /dev/null
+    depends_on:
+      - localmongo
+  localmongo:
+    image: mongo:5.0.6
+    ports:
+      - 60010:27017/tcp
+    networks:
+      - mongonet
+    volumes:
+      - /home/sabariram/Projects/DBData/RoleBasedAuth/Mongo:/data/db
+networks:
+  mongonet: {}
+  graylog_graylog:
+    external: true

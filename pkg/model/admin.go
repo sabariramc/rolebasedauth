@@ -7,4 +7,5 @@ type Admin struct {
 	Name     string             `bson:"name"`
 	ApiKey   string             `bson:"apiKey"`
 	IsActive bool               `bson:"isActive"`
+	Claims   []string           `bson:"claims"`
 }

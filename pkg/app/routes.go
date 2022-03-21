@@ -8,5 +8,5 @@ import (
 )
 
 func (r *RoleBasedAuthentication) registerBookStoreRoutes(router *mux.Router) {
-	router.HandleFunc("/tenant", middleware.RequireApiKey(r.adminAuth)(r.CreateTenant())).Methods(http.MethodPost)
+	router.HandleFunc("/tenant", middleware.RequireClaim(r.adminAuth)(r.CreateTenant())).Methods(http.MethodPost)
 }

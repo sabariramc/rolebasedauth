@@ -20,6 +20,7 @@ type RoleBasedAuthentication struct {
 	db        *mongo.Mongo
 	log       *log.Logger
 	validator *validator.Validator
+	adminAuth *mongo.Collection
 }
 
 func GetDefaultApp() (*RoleBasedAuthentication, error) {
@@ -59,6 +60,7 @@ func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWrit
 	}
 	r.db = conn
 	r.registerValidator()
+	r.adminAuth = conn.NewCollection("")
 	r.log.Info(ctx, "App Created", nil)
 	r.registerBookStoreRoutes(r.b.GetRouter())
 	r.log.Info(ctx, "Routes Registered", nil)

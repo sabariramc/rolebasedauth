@@ -2,11 +2,12 @@ module sabariram.com/rolebasedauth
 
 go 1.18
 
-replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.2.2
+replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.2.4
 
 require (
 	github.com/gorilla/mux v1.8.0
 	github.com/joho/godotenv v1.4.0
+	go.mongodb.org/mongo-driver v1.8.4
 	gopkg.in/validator.v2 v2.0.0-20210331031555-b37d688a7fb0
 	gotest.tools v2.2.0+incompatible
 	sabariram.com/goserverbase v0.0.0-00010101000000-000000000000
@@ -27,7 +28,6 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20201027041543-1326539a0a0a // indirect
-	go.mongodb.org/mongo-driver v1.8.4 // indirect
 	golang.org/x/crypto v0.0.0-20220315160706-3147a52a75dd // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c // indirect

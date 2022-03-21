@@ -8,7 +8,8 @@
             "mode": "exec",
             "program": "${workspaceFolder}/bin/${workspaceFolderBasename}",
             "preLaunchTask": "build",
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

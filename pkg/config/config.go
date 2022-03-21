@@ -6,11 +6,12 @@ import (
 )
 
 type Config struct {
-	Logger *config.LoggerConfig
-	App    *config.ServerConfig
-	Mongo  *config.MongoConfig
-	KMS    *config.AWSConfig
-	SNS    *config.AWSConfig
+	Logger  *config.LoggerConfig
+	App     *config.ServerConfig
+	Mongo   *config.MongoConfig
+	KMS     *config.AWSConfig
+	SNS     *config.AWSConfig
+	Runtime *config.RuntimeConfig
 }
 
 func NewConfig() *Config {
@@ -36,6 +37,7 @@ func NewConfig() *Config {
 		},
 		Mongo: &config.MongoConfig{
 			ConnectionString: utils.GetEnv("MONGO_URL", ""),
+			DatabaseName:     utils.GetEnvMust("MONGO_DATABASENAME"),
 		},
 
 		KMS: &config.AWSConfig{
@@ -43,6 +45,9 @@ func NewConfig() *Config {
 		},
 		SNS: &config.AWSConfig{
 			Arn: utils.GetEnv("SNS_ARN", ""),
+		},
+		Runtime: &config.RuntimeConfig{
+			GoMaxProcs: utils.GetEnvInt("GOMAXPROC", 1),
 		},
 	}
 }

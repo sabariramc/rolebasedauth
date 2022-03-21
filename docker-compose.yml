@@ -10,7 +10,7 @@ services:
     environment:
       GRAYLOG_ADD: graylog
       MONGO_URL: mongodb://localmongo:27017
-      SERVICE_NAME: ${APP_SERVICE_NAME}
+      SERVICE_NAME: ${SERVICE_NAME}
       LOG_LEVEL: ${LOG_LEVEL}
       AWS_REGION: ${AWS_REGION}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}

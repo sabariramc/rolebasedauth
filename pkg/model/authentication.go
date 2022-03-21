@@ -2,12 +2,19 @@ package model
 
 import "sabariram.com/rolebasedauth/pkg/constants"
 
+type AuthConfiguration map[string]interface{}
+
 type AllowedAuthentication struct {
 	Type          constants.AuthenticationType `json:"type" bson:"type"`
-	Configuration map[string]string            `json:"configuration" bson:"configuration"`
+	Configuration AuthConfiguration            `json:"configuration" bson:"configuration"`
 }
 
 type Authentication struct {
 	AllowedAuthentication
-	TenantUserIdentifier string `json:"tenantUserIdentifier" bson:"tenantUserIdentifier"`
+	UserLoginId string `json:"userLoginId" bson:"userLoginId"`
+}
+
+type CreateAuthenticationDTO struct {
+	Type          constants.AuthenticationType `json:"type" validate:"nonzero, authtype"`
+	Configuration AuthConfiguration            `json:"configuration" validate:"nonzero"`
 }

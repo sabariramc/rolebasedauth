@@ -12,3 +12,7 @@ const (
 	LogOutTypeUserInactive LogoutType = "USER_INACTIVE"
 	LogOutTypeExpired      LogoutType = "EXPIRED"
 )
+
+var AuthTypeList = []AuthenticationType{AuthTypeBasicAuth}
+
+var LogOutTypeList = []LogoutType{LogOutTypeExpired, LogOutTypeUserInactive, LogOutTypeUserLogout}

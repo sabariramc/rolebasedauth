@@ -4,11 +4,11 @@ type Claim string
 
 const (
 	TenantCreate    Claim = "tenant.create"
-	RoleCreate      Claim = "role.create"
-	RoleUpdate      Claim = "role.update"
-	RoleDelete      Claim = "role.delete"
-	RoleGet         Claim = "role.get"
-	RoleList        Claim = "role.list"
+	UserRoleCreate  Claim = "userrole.create"
+	UserRoleUpdate  Claim = "userrole.update"
+	UserRoleDelete  Claim = "userrole.delete"
+	UserRoleGet     Claim = "userrole.get"
+	UserRoleList    Claim = "userrole.list"
 	UserGroupCreate Claim = "usergroup.create"
 	UserGroupUpdate Claim = "usergroup.update"
 	UserGroupDelete Claim = "usergroup.delete"
@@ -20,3 +20,22 @@ const (
 	UserGet         Claim = "user.get"
 	UserList        Claim = "user.list"
 )
+
+var RoleAdmin = []Claim{
+	TenantCreate,
+	UserRoleCreate,
+	UserRoleUpdate,
+	UserRoleDelete,
+	UserRoleGet,
+	UserRoleList,
+	UserGroupCreate,
+	UserGroupUpdate,
+	UserGroupDelete,
+	UserGroupGet,
+	UserGroupList,
+	UserCreate,
+	UserUpdate,
+	UserDelete,
+	UserGet,
+	UserList,
+}

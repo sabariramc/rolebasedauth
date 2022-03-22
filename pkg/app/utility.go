@@ -1,37 +1,19 @@
 package app
 
 import (
-	"regexp"
-
-	"gopkg.in/validator.v2"
-	"sabariram.com/goserverbase/errors"
+	"bytes"
+	"encoding/json"
 )
 
-func ValidateEnum[K comparable](enumList []K) validator.ValidationFunc {
-	return func(v interface{}, param string) error {
-		val, ok := v.(K)
-		if !ok {
-			return validator.ErrUnsupported
-		}
-		for _, l := range enumList {
-			if val == l {
-				return nil
-			}
-		}
-		return errors.NewCustomError("BAD_PARAM", "Invalid value for param", map[string]interface{}{
-			"expectedValues": enumList,
-		})
+func JsonTransformer(src interface{}, dest interface{}) error {
+	var buf bytes.Buffer
+	err := json.NewEncoder(&buf).Encode(src)
+	if err != nil {
+		return err
 	}
-}
-
-func ValidateURL(v interface{}, param string) error {
-	val, ok := v.(string)
-	if !ok {
-		return validator.ErrUnsupported
+	err = json.NewDecoder(&buf).Decode(dest)
+	if err != nil {
+		return err
 	}
-	match, err := regexp.Match("^(http|https)://[a-z0-9-]+(?:.[a-z0-9-]+)+\\.([a-z]{2,3})$", []byte(val))
-	if err == nil && match {
-		return nil
-	}
-	return errors.NewCustomError("BAD_PARAM", "Invalid value for param", nil)
+	return nil
 }

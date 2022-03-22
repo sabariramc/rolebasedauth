@@ -4,14 +4,12 @@ import (
 	"context"
 	"net/http"
 	"runtime"
-	"time"
 
 	"gopkg.in/validator.v2"
 	"sabariram.com/goserverbase/baseapp"
 	"sabariram.com/goserverbase/db/mongo"
 	"sabariram.com/goserverbase/log"
 	"sabariram.com/goserverbase/log/logwriter"
-	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/config"
 	"sabariram.com/rolebasedauth/pkg/middleware"
 )
@@ -41,15 +39,15 @@ func GetDefaultApp() (*RoleBasedAuthentication, error) {
 	runtime.GOMAXPROCS(c.Runtime.GoMaxProcs)
 	consoleLogger := logwriter.NewConsoleWriter(*hostParams)
 	lmux := log.NewChanneledLogMultipluxer(uint8(c.Logger.BufferSize), consoleLogger, graylogger)
-	return GetApp(c, lmux, consoleLogger, utils.IST)
+	return GetApp(c, lmux, consoleLogger)
 }
 
-func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWriter, timeZone *time.Location) (*RoleBasedAuthentication, error) {
+func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWriter) (*RoleBasedAuthentication, error) {
 	r := &RoleBasedAuthentication{
 		b: baseapp.NewBaseApp(baseapp.ServerConfig{
 			LoggerConfig: c.Logger,
 			AppConfig:    c.App,
-		}, lMux, auditLog, timeZone),
+		}, lMux, auditLog),
 		validator: validator.NewValidator(),
 	}
 	ctx := r.b.GetCorrelationContext(context.Background(), log.GetDefaultCorrelationParams(c.App.ServiceName))
@@ -59,6 +57,7 @@ func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWrit
 		return nil, err
 	}
 	r.db = conn
+
 	r.registerValidator()
 	r.log.Info(ctx, "App Created", nil)
 	r.registerBookStoreRoutes(r.b.GetRouter())

@@ -14,6 +14,7 @@ import (
 	"sabariram.com/rolebasedauth/pkg/app"
 	"sabariram.com/rolebasedauth/pkg/constants"
 	"sabariram.com/rolebasedauth/pkg/model"
+	"sabariram.com/rolebasedauth/pkg/model/tenant"
 )
 
 func BenchmarkHandleListBook(b *testing.B) {
@@ -32,10 +33,10 @@ func TestHandleCreateTenant(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error creating server - %v", err)
 	}
-	body := &model.CreateTenantDTO{
+	body := &tenant.CreateTenantDTO{
 		Name:    "fasdfs",
 		BaseURL: "https://a.b.com",
-		Claims: []*model.CreateClaimDTO{
+		Claims: []*tenant.CreateClaimDTO{
 			{Claim: "fads.fads", Description: "fadsf"},
 		},
 		AuthenticationType: []*model.CreateAuthenticationDTO{

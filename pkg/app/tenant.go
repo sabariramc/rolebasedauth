@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	"sabariram.com/goserverbase/errors"
-	"sabariram.com/rolebasedauth/pkg/model"
+	"sabariram.com/rolebasedauth/pkg/model/tenant"
 )
 
 func (r *RoleBasedAuthentication) CreateTenant() http.HandlerFunc {
 
-	var body model.CreateTenantDTO
+	var body tenant.CreateTenantDTO
 	return r.b.JSONResponder(&body, func(req *http.Request) (statusCode int, res interface{}, err error) {
 		if err := r.validator.Validate(body); err != nil {
 			return http.StatusBadRequest, nil, errors.NewCustomError("INVALID_PAYLOAD", "Error in payload", err)

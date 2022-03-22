@@ -10,6 +10,7 @@ import (
 	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/constants"
 	"sabariram.com/rolebasedauth/pkg/model"
+	T "sabariram.com/rolebasedauth/pkg/model/tenant"
 )
 
 func RequireApiKey(admin *mongo.Collection, tenant *mongo.Collection) func(http.HandlerFunc) http.HandlerFunc {
@@ -24,7 +25,7 @@ func RequireApiKey(admin *mongo.Collection, tenant *mongo.Collection) func(http.
 				if err == nil {
 					if val.TenantId != "" {
 						cur = tenant.FindOne(r.Context(), map[string]interface{}{"tenantId": val.TenantId, "isActive": true})
-						val := &model.Tenant{}
+						val := &T.Tenant{}
 						err = cur.Decode(val)
 						if err != nil {
 							r = r.WithContext(context.WithValue(r.Context(), constants.TenantIdKey, val.TenantId))

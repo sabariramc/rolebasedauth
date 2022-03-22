@@ -2,7 +2,7 @@ module sabariram.com/rolebasedauth
 
 go 1.18
 
-replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.2.5
+replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.2.8
 
 require (
 	github.com/gorilla/mux v1.8.0

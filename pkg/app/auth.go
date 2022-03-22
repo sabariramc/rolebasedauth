@@ -8,14 +8,12 @@ import (
 
 	"gopkg.in/validator.v2"
 	"sabariram.com/goserverbase/baseapp"
-	"sabariram.com/goserverbase/constant"
 	"sabariram.com/goserverbase/db/mongo"
-	"sabariram.com/goserverbase/errors"
 	"sabariram.com/goserverbase/log"
 	"sabariram.com/goserverbase/log/logwriter"
 	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/config"
-	"sabariram.com/rolebasedauth/pkg/model"
+	"sabariram.com/rolebasedauth/pkg/middleware"
 )
 
 type RoleBasedAuthentication struct {
@@ -70,30 +68,7 @@ func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWrit
 }
 
 func (rba *RoleBasedAuthentication) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	apiKey := r.Header.Get("x-api-key")
-	var err error
-	if apiKey != "" {
-		cur := rba.adminAuth.FindOne(r.Context(), map[string]interface{}{"apiKey": apiKey, "isActive": true})
-		val := &model.Admin{}
-		err = cur.Decode(val)
-		if err == nil {
-			r = r.WithContext(context.WithValue(r.Context(), constant.ActorIdKey, val.Name))
-			r = r.WithContext(context.WithValue(r.Context(), constant.ClaimsKey, val.Claims))
-			rba.b.ServeHTTP(w, r)
-			return
-		}
-		err = errors.NewCustomError("INVALID_API_KEY", "invalid api key", nil)
-	} else {
-		err = errors.NewCustomError("MISSING_API_KEY", "requires api key", nil)
-	}
-	w.Header().Set(constant.HeaderContentType, constant.ContentTypeJSON)
-	w.WriteHeader(http.StatusUnauthorized)
-	b := err.Error()
-	_, err = w.Write([]byte(b))
-	if err != nil {
-		panic(err)
-	}
-
+	middleware.RequireApiKey(rba.db.NewCollection("Admin"), rba.db.NewCollection("Tenant"))(rba.b.ServeHTTP)(w, r)
 }
 
 func (rba *RoleBasedAuthentication) GetLogger() *log.Logger {

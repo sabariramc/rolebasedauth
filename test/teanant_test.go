@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"gotest.tools/assert"
+	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/app"
 	"sabariram.com/rolebasedauth/pkg/constants"
 	"sabariram.com/rolebasedauth/pkg/model"
@@ -33,8 +34,7 @@ func TestHandleCreateTenant(t *testing.T) {
 	}
 	body := &model.CreateTenantDTO{
 		Name:    "fasdfs",
-		Path:    "fadsfasd",
-		BaseURL: "https://fasdfasfd",
+		BaseURL: "https://a.b.com",
 		Claims: []*model.CreateClaimDTO{
 			{Claim: "fads.fads", Description: "fadsf"},
 		},
@@ -47,6 +47,7 @@ func TestHandleCreateTenant(t *testing.T) {
 	var buf bytes.Buffer
 	json.NewEncoder(&buf).Encode(body)
 	req := httptest.NewRequest("POST", "/tenant", &buf)
+	req.Header.Set("x-api-key", utils.GetEnv("TEST_API_KEY", ""))
 	w := httptest.NewRecorder()
 	srv.ServeHTTP(w, req)
 	blob, _ := ioutil.ReadAll(w.Body)

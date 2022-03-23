@@ -9,18 +9,18 @@ import (
 	"sabariram.com/goserverbase/errors"
 	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/constants"
-	"sabariram.com/rolebasedauth/pkg/model"
+	"sabariram.com/rolebasedauth/pkg/model/admin"
 	T "sabariram.com/rolebasedauth/pkg/model/tenant"
 )
 
-func RequireApiKey(admin *mongo.Collection, tenant *mongo.Collection) func(http.HandlerFunc) http.HandlerFunc {
+func RequireApiKey(adminColl *mongo.Collection, tenant *mongo.Collection) func(http.HandlerFunc) http.HandlerFunc {
 	return func(f http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			apiKey := r.Header.Get("x-api-key")
 			var err error
 			if apiKey != "" {
-				cur := admin.FindOne(r.Context(), map[string]interface{}{"apiKey": utils.GetHash(apiKey), "isActive": true})
-				val := &model.Admin{}
+				cur := adminColl.FindOne(r.Context(), map[string]interface{}{"apiKey": utils.GetHash(apiKey), "isActive": true})
+				val := &admin.Admin{}
 				err = cur.Decode(val)
 				if err == nil {
 					if val.TenantId != "" {

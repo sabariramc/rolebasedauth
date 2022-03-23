@@ -23,7 +23,7 @@ type LoginLog struct {
 }
 
 type User struct {
-	mongo.BaseMongoModel
+	mongo.BaseMongoModel `bson:",inline"`
 	TenantId             string          `json:"tenantId" bson:"tenantId"`
 	TenantUserIdentifier string          `json:"tenantUserIdentifier" bson:"tenantUserIdentifier"`
 	UserLoginId          []string        `json:"userLoginId" bson:"userLoginId"`

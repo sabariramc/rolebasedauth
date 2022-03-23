@@ -2,6 +2,7 @@ package tenant
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,20 +15,20 @@ import (
 )
 
 type Claim struct {
-	mongo.BaseMongoDocument
-	ClaimId     string `json:"claimId" bson:"claimId"`
-	Claim       string `json:"claim" bson:"claim"`
-	Description string `json:"description" bson:"description"`
+	mongo.BaseMongoDocument `bson:"inline"`
+	ClaimId                 string `json:"claimId" bson:"claimId"`
+	Claim                   string `json:"claim" bson:"claim"`
+	Description             string `json:"description" bson:"description"`
 }
 
 type Tenant struct {
-	mongo.BaseMongoModel
-	TenantId           string                         `json:"tenantId" bson:"tenantId"`
-	Name               string                         `json:"name" bson:"name"`
-	BaseURL            string                         `json:"baseURL" bson:"baseURL"`
-	Claims             []*Claim                       `json:"claims" bson:"claims"`
-	AuthenticationType []*model.AllowedAuthentication `json:"authenticationType" bson:"authenticationType"`
-	IsActive           bool
+	mongo.BaseMongoModel `bson:",inline"`
+	TenantId             string                         `json:"tenantId" bson:"tenantId"`
+	Name                 string                         `json:"name" bson:"name"`
+	BaseURL              string                         `json:"baseURL" bson:"baseURL"`
+	Claims               []*Claim                       `json:"claims" bson:"claims"`
+	AuthenticationType   []*model.AllowedAuthentication `json:"authenticationType" bson:"authenticationType"`
+	IsActive             bool                           `json:"isActive" bson:"isActive"`
 }
 
 func (t *Tenant) Create(ctx context.Context, db *mongo.Mongo) error {
@@ -49,7 +50,7 @@ func (t *Tenant) Create(ctx context.Context, db *mongo.Mongo) error {
 	}
 	res, err := coll.InsertOne(ctx, t)
 	if err != nil {
-		return err
+		return fmt.Errorf("Tenant.Create: %w", err)
 	}
 	t.ID = res.InsertedID.(primitive.ObjectID)
 	return nil
@@ -60,12 +61,12 @@ func (t *Tenant) Update(ctx context.Context, db *mongo.Mongo, doc *UpdateTenantD
 	actionAt := time.Now()
 	t.UpdatedAt = actionAt
 	t.UpdatedBy = actor
-	u := make(map[string]interface{})
+	u := make(map[string]any)
 	if len(doc.Claims) > 0 {
 		claims := make([]*Claim, len(doc.Claims))
 		err := utility.JsonTransformer(doc.Claims, claims)
 		if err != nil {
-			return err
+			return fmt.Errorf("Tenant.Update: %w", err)
 		}
 		for _, v := range claims {
 			if v.ClaimId == "" {
@@ -85,9 +86,9 @@ func (t *Tenant) Update(ctx context.Context, db *mongo.Mongo, doc *UpdateTenantD
 		return nil
 	}
 	coll := db.NewCollection("Tenant")
-	_, err := coll.UpdateOne(ctx, map[string]string{"tenantId": t.TenantId}, map[string]interface{}{"$set": u})
+	_, err := coll.UpdateOne(ctx, map[string]string{"tenantId": t.TenantId}, map[string]any{"$set": u})
 	if err != nil {
-		return err
+		return fmt.Errorf("Tenant.Update: %w", err)
 	}
 	return nil
 }
@@ -97,9 +98,9 @@ func (t *Tenant) Delete(ctx context.Context, db *mongo.Mongo) error {
 	actor := ctx.Value(constant.ActorIdKey).(string)
 	t.UpdatedAt = time.Now()
 	t.UpdatedBy = actor
-	_, err := coll.UpdateOne(ctx, map[string]string{"tenantId": t.TenantId}, map[string]interface{}{"$set": map[string]bool{"isActive": false}})
+	_, err := coll.UpdateOne(ctx, map[string]string{"tenantId": t.TenantId}, map[string]any{"$set": map[string]bool{"isActive": false}})
 	if err != nil {
-		return err
+		return fmt.Errorf("Tenant.Delete: %w", err)
 	}
 	return nil
 }
@@ -115,7 +116,7 @@ func List(ctx context.Context, db *mongo.Mongo, filter interface{}, opts ...*opt
 	ires, err := coll.FindFetch(ctx, createContainer, filter, opts...)
 	var res []*Tenant
 	if err != nil {
-		return res, err
+		return nil, fmt.Errorf("Tenant.List: %w", err)
 	}
 	res = make([]*Tenant, len(ires))
 	for i, v := range ires {

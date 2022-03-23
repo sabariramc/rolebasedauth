@@ -13,12 +13,11 @@ func RequireClaim(claim constants.Claim) func(http.HandlerFunc) http.HandlerFunc
 	return func(f http.HandlerFunc) http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
 			var err error
-			cs := string(claim)
 			reqClaims := r.Context().Value(c.ClaimsKey)
-			claimList, ok := reqClaims.([]string)
+			claimList, ok := reqClaims.([]constants.Claim)
 			if ok {
 				for _, v := range claimList {
-					if cs == v {
+					if claim == v {
 						f(w, r)
 						return
 					}

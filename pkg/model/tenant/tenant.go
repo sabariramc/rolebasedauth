@@ -11,7 +11,6 @@ import (
 	"sabariram.com/goserverbase/db/mongo"
 	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/model"
-	"sabariram.com/rolebasedauth/pkg/utility"
 )
 
 type Claim struct {
@@ -64,7 +63,7 @@ func (t *Tenant) Update(ctx context.Context, db *mongo.Mongo, doc *UpdateTenantD
 	u := make(map[string]any)
 	if len(doc.Claims) > 0 {
 		claims := make([]*Claim, len(doc.Claims))
-		err := utility.JsonTransformer(doc.Claims, claims)
+		err := utils.JsonTransformer(doc.Claims, claims)
 		if err != nil {
 			return fmt.Errorf("Tenant.Update: %w", err)
 		}

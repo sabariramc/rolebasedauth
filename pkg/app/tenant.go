@@ -6,9 +6,9 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"sabariram.com/goserverbase/errors"
+	"sabariram.com/goserverbase/utils"
 	"sabariram.com/rolebasedauth/pkg/model/admin"
 	"sabariram.com/rolebasedauth/pkg/model/tenant"
-	"sabariram.com/rolebasedauth/pkg/utility"
 )
 
 func (rbac *RoleBasedAuthentication) CreateTenant() http.HandlerFunc {
@@ -19,7 +19,7 @@ func (rbac *RoleBasedAuthentication) CreateTenant() http.HandlerFunc {
 		}
 		t := &tenant.Tenant{}
 		a := &admin.Admin{}
-		err = utility.JsonTransformer(body, t)
+		err = utils.JsonTransformer(body, t)
 		if err != nil {
 			return http.StatusInternalServerError, nil, fmt.Errorf("RoleBasedAuthentication.CreateTenant Transformation: %w", err)
 		}

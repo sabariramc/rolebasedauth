@@ -14,7 +14,7 @@ type Authentication struct {
 	UserLoginId string `json:"userLoginId" bson:"userLoginId"`
 }
 
-type CreateAuthenticationDTO struct {
+type AuthenticationDTO struct {
 	Type          constants.AuthenticationType `json:"type" validate:"nonzero, authtype"`
 	Configuration AuthConfiguration            `json:"configuration" validate:"nonzero"`
 }

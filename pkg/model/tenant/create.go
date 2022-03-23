@@ -11,5 +11,5 @@ type CreateTenantDTO struct {
 	Name               string                           `json:"name" validate:"nonzero, min=3, max=40"`
 	BaseURL            string                           `json:"baseURL" validate:"nonzero, url, min=3, max=40"`
 	Claims             []*CreateClaimDTO                `json:"claims" validate:"nonzero"`
-	AuthenticationType []*model.CreateAuthenticationDTO `json:"authenticationType" validate:"nonzero"`
+	AuthenticationType []*model.AuthenticationDTO `json:"authenticationType" validate:"nonzero"`
 }

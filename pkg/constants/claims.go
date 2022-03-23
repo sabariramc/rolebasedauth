@@ -3,7 +3,9 @@ package constants
 type Claim string
 
 const (
+	Admin           Claim = "admin"
 	TenantCreate    Claim = "tenant.create"
+	TenantUpdate    Claim = "tenant.update"
 	UserRoleCreate  Claim = "userrole.create"
 	UserRoleUpdate  Claim = "userrole.update"
 	UserRoleDelete  Claim = "userrole.delete"
@@ -21,8 +23,9 @@ const (
 	UserList        Claim = "user.list"
 )
 
-var RoleAdmin = []Claim{
+var RoleTenantAdmin = []Claim{
 	TenantCreate,
+	TenantUpdate,
 	UserRoleCreate,
 	UserRoleUpdate,
 	UserRoleDelete,

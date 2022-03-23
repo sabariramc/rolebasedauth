@@ -39,7 +39,7 @@ func TestHandleCreateTenant(t *testing.T) {
 		Claims: []*tenant.CreateClaimDTO{
 			{Claim: "fads.fads", Description: "fadsf"},
 		},
-		AuthenticationType: []*model.CreateAuthenticationDTO{
+		AuthenticationType: []*model.AuthenticationDTO{
 			{Type: constants.AuthTypeBasicAuth, Configuration: model.AuthConfiguration{
 				"fasdf": "fasfd",
 			}},

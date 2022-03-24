@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"sabariram.com/goserverbase/errors"
 	"sabariram.com/goserverbase/utils"
+	"sabariram.com/rolebasedauth/pkg/constants"
 	"sabariram.com/rolebasedauth/pkg/model/admin"
 	"sabariram.com/rolebasedauth/pkg/model/tenant"
 )
@@ -57,5 +58,19 @@ func (rbac *RoleBasedAuthentication) CreateTenant() http.HandlerFunc {
 			panic(err)
 		}
 		return http.StatusOK, map[string]any{"tenant": t, "admin": a, "adminKey": apiKey}, nil
+	})
+}
+
+func (rbac *RoleBasedAuthentication) SearchTenant() http.HandlerFunc {
+	return rbac.b.JSONResponder(nil, func(r *http.Request) (statusCode int, res interface{}, err error) {
+		tenantId := r.Context().Value(constants.ContextVariableTenantIdKey)
+		if tenantId != nil {
+			res, err = tenant.List(r.Context(), rbac.db, map[string]string{"tenantId": tenantId.(string)})
+			if err != nil {
+				panic(fmt.Errorf("RoleBasedAuthentication.SearchTenant : %w", err))
+			}
+			return http.StatusOK, res, nil
+		}
+		return http.StatusBadRequest, nil, nil
 	})
 }

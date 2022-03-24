@@ -5,6 +5,10 @@ type Claim string
 const (
 	TenantCreate    Claim = "tenant.create"
 	TenantUpdate    Claim = "tenant.update"
+	TenantDelete    Claim = "tenant.delete"
+	TenantList      Claim = "tenant.list"
+	TenantGet       Claim = "tenant.get"
+	TenantSearch    Claim = "tenant.search"
 	UserRoleCreate  Claim = "userrole.create"
 	UserRoleUpdate  Claim = "userrole.update"
 	UserRoleDelete  Claim = "userrole.delete"
@@ -24,6 +28,8 @@ const (
 
 var RoleTenantAdmin = []Claim{
 	TenantUpdate,
+	TenantSearch,
+	TenantGet,
 	UserRoleCreate,
 	UserRoleUpdate,
 	UserRoleDelete,

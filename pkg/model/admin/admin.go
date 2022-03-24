@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"sabariram.com/goserverbase/constant"
 	"sabariram.com/goserverbase/db/mongo"
 	"sabariram.com/goserverbase/utils"
@@ -35,10 +34,9 @@ func (a *Admin) Create(ctx context.Context, db *mongo.Mongo, tenantId, tenantNam
 	a.Claims = constants.RoleTenantAdmin
 	apiKey := utils.GetRandomString(20, "")
 	a.ApiKey = utils.GetHash(apiKey)
-	res, err := coll.InsertOne(ctx, a)
+	_, err := coll.InsertOne(ctx, a)
 	if err != nil {
 		return "", fmt.Errorf("Admin.Create: %w", err)
 	}
-	a.ID = res.InsertedID.(primitive.ObjectID)
 	return apiKey, nil
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"sabariram.com/goserverbase/constant"
 	"sabariram.com/goserverbase/db/mongo"
@@ -47,11 +46,10 @@ func (t *Tenant) Create(ctx context.Context, db *mongo.Mongo) error {
 		v.UpdatedBy = actor
 		v.ClaimId = utils.GetRandomString(15, "claim")
 	}
-	res, err := coll.InsertOne(ctx, t)
+	_, err := coll.InsertOne(ctx, t)
 	if err != nil {
 		return fmt.Errorf("Tenant.Create: %w", err)
 	}
-	t.ID = res.InsertedID.(primitive.ObjectID)
 	return nil
 }
 

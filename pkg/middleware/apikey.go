@@ -27,8 +27,8 @@ func RequireApiKey(adminColl *mongo.Collection, tenant *mongo.Collection) func(h
 						cur = tenant.FindOne(r.Context(), map[string]interface{}{"tenantId": val.TenantId, "isActive": true})
 						val := &T.Tenant{}
 						err = cur.Decode(val)
-						if err != nil {
-							r = r.WithContext(context.WithValue(r.Context(), constants.TenantIdKey, val.TenantId))
+						if err == nil {
+							r = r.WithContext(context.WithValue(r.Context(), constants.ContextVariableTenantIdKey, val.TenantId))
 						}
 					}
 					r = r.WithContext(context.WithValue(r.Context(), constant.ActorIdKey, val.Name))

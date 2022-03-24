@@ -13,7 +13,7 @@ func RequireTenant(f http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var err error
 		params := mux.Vars(r)
-		value, ok := r.Context().Value(constants.TenantPathKey).(string)
+		value, ok := r.Context().Value(constants.ContextVariableTenantIdKey).(string)
 		if ok && value != "" && params["tenantId"] == value {
 			f(w, r)
 		}

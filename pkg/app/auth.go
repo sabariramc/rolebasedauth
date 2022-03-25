@@ -60,7 +60,7 @@ func GetApp(c *config.Config, lMux log.LogMultipluxer, auditLog log.AuditLogWrit
 
 	r.registerValidator()
 	r.log.Info(ctx, "App Created", nil)
-	r.registerBookStoreRoutes(r.b.GetRouter())
+	r.b.RegisterRoutes(r.Routes())
 	r.log.Info(ctx, "Routes Registered", nil)
 	r.log.Info(ctx, "Starting server on port - "+r.b.GetPort(), nil)
 	return r, nil

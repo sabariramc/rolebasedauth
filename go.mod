@@ -2,10 +2,11 @@ module sabariram.com/rolebasedauth
 
 go 1.18
 
-replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.3.11
+replace sabariram.com/goserverbase => sabariram.com/goserverbase.git v0.3.14
 
 require (
 	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/schema v1.2.0
 	github.com/joho/godotenv v1.4.0
 	go.mongodb.org/mongo-driver v1.8.4
 	gopkg.in/validator.v2 v2.0.0-20210331031555-b37d688a7fb0

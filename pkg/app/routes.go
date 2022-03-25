@@ -3,16 +3,31 @@ package app
 import (
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"sabariram.com/goserverbase/baseapp"
 	"sabariram.com/rolebasedauth/pkg/constants"
 	"sabariram.com/rolebasedauth/pkg/middleware"
 )
 
-func (r *RoleBasedAuthentication) registerBookStoreRoutes(router *mux.Router) {
-	router = router.PathPrefix("/tenant").Subrouter()
-	router.Methods(http.MethodPost).HandlerFunc(middleware.RequireClaim(constants.TenantCreate)(r.CreateTenant()))
-	router.HandleFunc("/search", middleware.RequireClaim(constants.TenantSearch)(r.SearchTenant()))
-	router = router.PathPrefix("/{tenantId}").Subrouter()
-	// u := router.PathPrefix("/user").Subrouter()
-
+func (rbac *RoleBasedAuthentication) Routes() *baseapp.APIRoute {
+	return &baseapp.APIRoute{
+		"/tenant": &baseapp.APIResource{
+			Handlers: map[string]*baseapp.APIHandler{
+				http.MethodPost: {
+					Func: middleware.RequireClaim(constants.TenantCreate)(rbac.CreateTenant()),
+				},
+				http.MethodGet: {
+					Func: middleware.RequireClaim(constants.TenantList)(rbac.ListTenant()),
+				},
+			},
+			SubResource: map[string]*baseapp.APIResource{
+				"/search": {
+					Handlers: map[string]*baseapp.APIHandler{
+						http.MethodGet: {
+							Func: middleware.RequireClaim(constants.TenantSearch)(rbac.SearchTenant()),
+						},
+					},
+				},
+			},
+		},
+	}
 }

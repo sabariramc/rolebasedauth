@@ -27,6 +27,13 @@ func (rbac *RoleBasedAuthentication) Routes() *baseapp.APIRoute {
 						},
 					},
 				},
+				"/{tenantId}": {
+					Handlers: map[string]*baseapp.APIHandler{
+						http.MethodGet: {
+							Func: middleware.RequireClaim(constants.TenantGet)(middleware.RequireTenant(rbac.GetTenant())),
+						},
+					},
+				},
 			},
 		},
 	}

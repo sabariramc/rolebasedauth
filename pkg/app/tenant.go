@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -104,5 +105,24 @@ func (rbac *RoleBasedAuthentication) ListTenant() http.HandlerFunc {
 			panic(fmt.Errorf("RoleBasedAuthentication.ListTenant : %w", err))
 		}
 		return http.StatusOK, tList, nil
+	})
+}
+
+func (rbac *RoleBasedAuthentication) GetTenant() http.HandlerFunc {
+	return rbac.b.JSONResponder(nil, func(r *http.Request) (statusCode int, res interface{}, err error) {
+		t := &tenant.Tenant{}
+		t.TenantId = mux.Vars(r)["tenantId"]
+		err = t.Get(r.Context(), rbac.db)
+		if err != nil {
+			panic(fmt.Errorf("RoleBasedAuthentication.GetTenant : %w", err))
+		}
+		return http.StatusOK, t, nil
+	})
+}
+
+func (rbac *RoleBasedAuthentication) UpdateTenant() http.HandlerFunc {
+	var body tenant.UpdateTenantDTO
+	return rbac.b.JSONResponder(&body, func(r *http.Request) (statusCode int, res interface{}, err error) {
+		return 100, nil, nil
 	})
 }

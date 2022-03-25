@@ -27,7 +27,7 @@ func (rbac *RoleBasedAuthentication) CreateTenant() http.HandlerFunc {
 		a := &admin.Admin{}
 		err = utils.JsonTransformer(body, t)
 		if err != nil {
-			return http.StatusInternalServerError, nil, fmt.Errorf("RoleBasedAuthentication.CreateTenant Transformation: %w", err)
+			panic(fmt.Errorf("RoleBasedAuthentication.CreateTenant Transformation: %w", err))
 		}
 		session, err := rbac.db.GetClient().StartSession()
 		if err != nil {
@@ -123,6 +123,7 @@ func (rbac *RoleBasedAuthentication) GetTenant() http.HandlerFunc {
 func (rbac *RoleBasedAuthentication) UpdateTenant() http.HandlerFunc {
 	var body tenant.UpdateTenantDTO
 	return rbac.b.JSONResponder(&body, func(r *http.Request) (statusCode int, res interface{}, err error) {
+
 		return 100, nil, nil
 	})
 }

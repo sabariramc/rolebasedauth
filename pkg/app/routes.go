@@ -33,6 +33,15 @@ func (rbac *RoleBasedAuthentication) Routes() *baseapp.APIRoute {
 							Func: middleware.RequireClaim(constants.TenantGet)(middleware.RequireTenant(rbac.GetTenant())),
 						},
 					},
+					SubResource: map[string]*baseapp.APIResource{
+						"/role": {
+							Handlers: map[string]*baseapp.APIHandler{
+								http.MethodPost: {
+									Func: middleware.RequireClaim(constants.UserRoleCreate)(middleware.RequireTenant(rbac.CreateRole())),
+								},
+							},
+						},
+					},
 				},
 			},
 		},
